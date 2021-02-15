@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PPF Patch Utility</title>
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+    <h1>PPF Patch and ECC/EDC Recalc Utility</h1>
+    <div>
+      by Wild Mouse
+      <a class="contact" href="https://twitter.com/3snow_p7im">
+        <img height="16" width="16"
+             src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/twitter.svg">
+      </a>
+      <a class="contact" href="https://twitch.tv/3snow_p7im">
+        <img height="16" width="16"
+             src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/twitch.svg"></a>
+    </div>
+    <table>
+      <tr>
+        <td id="ppf" class="slot">
+          <h2>PPF</h2>
+          <span id="ppf-status">Drop .ppf file here or</span>
+          <input id="ppf-file" type="file" accept=".ppf">
+        </td>
+        <td id="bin" class="slot">
+          <h2>BIN</h2>
+          <span id="bin-status">Drop .bin file here or</span>
+          <input id="bin-file" type="file" accept=".bin,.iso">
+        </td>
+      </tr>
+      <tr>
+        <td id="apply-row" colspan="2">
+          <button id="apply-button" disabled="disabled">Apply</button>
+        </td>
+      </tr>
+    </table>
+    <div id="notification"><span id="notification-text"><span></div>
+    <a id="download"></a>
+    <script src="ppf.js/ecc-edc-recalc-js/ecc-edc-recalc-js.js"></script>
+    <script src="ppf.js/ppf.js"></script>
+    <script src="worker.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>

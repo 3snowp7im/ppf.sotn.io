@@ -48,6 +48,15 @@ table {
     animation: pulse 1s infinite;
 }
 
+#apply-button:hover {
+    cursor: pointer;
+}
+
+#apply-button:active {
+    background: black;
+    animation: none;
+}
+
 #apply-button:disabled {
     visibility: hidden;
 }

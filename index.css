@@ -40,6 +40,7 @@ table {
 
 #apply-button {
     font-weight: bold;
+    cursor: pointer;
     color: #fff;
     background: transparent;
     border: none;

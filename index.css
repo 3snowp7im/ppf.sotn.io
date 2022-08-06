@@ -35,6 +35,16 @@ table {
     background: rgba(255, 255, 255, .2);
 }
 
+#sha1 select {
+    display: inline-block;
+    margin: 1em;
+    visibility: hidden;
+}
+
+#sha1 select.visible {
+    visibility: visible;
+}
+
 #apply-row {
     text-align: center;
 }

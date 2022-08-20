@@ -91,7 +91,7 @@ function dropListener(event) {
     }
     fileMap.get(target).file = file
     if (target === elems.sha1) {
-      updateDiscSelection()
+      loadChecksumFile()
     }
     const status = statusMap.get(target)
     status[0].innerText = file.name
@@ -108,36 +108,54 @@ document.body.addEventListener('drop', dropListener)
   slot.addEventListener('change', fileChange)
 })}
 
-function updateDiscSelection() {
+function updateDiscSelection(name, data) {
+  const lines = data.split('\r\n')
+  lines.pop()
+  if (!lines.every(function(line) {
+    return /^[a-f0-9]{40} \*.*$/.test(line)
+  })) {
+    notify('Invalid SHA1 file')
+  } else {
+    lines.forEach(function(line) {
+      if (!/\.cue$/.test(line)) {
+        const digest = line.match(/^([a-f0-9]{40})/)[1]
+        const disc = line.match(/^[a-f0-9]{40} \*(.*)$/)[1]
+        const option = document.createElement('option')
+        option.value = digest
+        option.innerText = disc
+        elems.disc.appendChild(option)
+      }
+    })
+    elems.disc.classList.add('visible')
+    localStorage.setItem('checksum', JSON.stringify({
+      name: name,
+      data: data,
+    }))
+  }
+}
+
+function loadChecksumFile() {
   while (elems.disc.firstChild) {
-    parent.removeChild(elems.disc.firstChild)
+    elems.disc.removeChild(elems.disc.firstChild)
   }
   const reader = new FileReader()
   reader.addEventListener('load', function() {
-    const lines = this.result.split('\r\n')
-    lines.pop()
-    if (!lines.every(function(line) {
-      return /^[a-f0-9]{40} \*.*$/.test(line)
-    })) {
-      notify('Invalid SHA1 file')
-    } else {
-      lines.forEach(function(line) {
-        if (!/\.cue$/.test(line)) {
-          const digest = line.match(/^([a-f0-9]{40})/)[1]
-          const disc = line.match(/^[a-f0-9]{40} \*(.*)$/)[1]
-          const option = document.createElement('option')
-          option.value = digest
-          option.innerText = disc
-          elems.disc.appendChild(option)
-        }
-      })
-      elems.disc.classList.add('visible')
-    }
+    updateDiscSelection(selectedFiles[2].file.name, this.result)
   })
   reader.readAsBinaryString(selectedFiles[2].file)
 }
 
-elems.sha1File.addEventListener('change', updateDiscSelection)
+elems.sha1File.addEventListener('change', loadChecksumFile)
+
+let checksum = localStorage.getItem('checksum')
+if (checksum) {
+  checksum = JSON.parse(checksum)
+  updateDiscSelection(checksum.name, checksum.data)
+  const status = statusMap.get(elems.sha1)
+  status[0].innerText = checksum.name
+  status[1].style.display = 'none'
+  updateStatus()
+}
 
 function getUrl() {
   const url = new URL(window.location.href)

@@ -9,6 +9,7 @@ const elems = {
   binStatus: document.getElementById('bin-status'),
   sha1Status: document.getElementById('sha1-status'),
   disc: document.getElementById('disc'),
+  clear: document.getElementById('clear'),
   button: document.getElementById('apply-button'),
   download: document.getElementById('download'),
   notification: document.getElementById('notification'),
@@ -126,7 +127,10 @@ function updateDiscSelection(name, data) {
         elems.disc.appendChild(option)
       }
     })
+    elems.sha1Status.innerText = name
+    elems.sha1File.style.display = 'none'
     elems.disc.classList.add('visible')
+    elems.clear.classList.add('visible')
     localStorage.setItem('checksum', JSON.stringify({
       name: name,
       data: data,
@@ -147,14 +151,17 @@ function loadChecksumFile() {
 
 elems.sha1File.addEventListener('change', loadChecksumFile)
 
+const sha1FileLabel = '(Optional) Drop .sha1 file here or'
+
 let checksum = localStorage.getItem('checksum')
 if (checksum) {
   checksum = JSON.parse(checksum)
   updateDiscSelection(checksum.name, checksum.data)
-  const status = statusMap.get(elems.sha1)
-  status[0].innerText = checksum.name
-  status[1].style.display = 'none'
+  elems.sha1Status.innerText = checksum.name
+  elems.sha1File.style.display = 'none'
   updateStatus()
+} else {
+  elems.sha1Status.innerText = sha1FileLabel
 }
 
 function getUrl() {
@@ -189,6 +196,17 @@ elems.button.addEventListener('click', function(event) {
       reader.readAsArrayBuffer(o.file)
     }
   })
+})
+
+elems.clear.addEventListener('click', function(event) {
+  localStorage.removeItem('checksum')
+  const status = statusMap.get(elems.sha1)
+  status[0].innerText = sha1FileLabel
+  status[1].style.display = 'inline'
+  delete fileMap.get(elems.sha1).file
+  updateStatus()
+  elems.disc.classList.remove('visible')
+  elems.clear.classList.remove('visible')
 })
 
 function createWorker() {

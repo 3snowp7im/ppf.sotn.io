@@ -36,12 +36,16 @@ table {
 }
 
 #sha1 select {
+    margin-top: 1em;
+}
+
+#sha1 select, #sha1 button {
     display: inline-block;
-    margin: 1em;
+    margin-bottom: 1em;
     visibility: hidden;
 }
 
-#sha1 select.visible {
+#sha1 .visible {
     visibility: visible;
 }
 
